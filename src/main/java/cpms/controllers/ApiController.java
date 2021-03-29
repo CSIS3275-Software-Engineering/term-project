@@ -1,15 +1,36 @@
 package cpms.controllers;
 
+import cpms.models.Payment;
+import cpms.models.Spot;
 import cpms.models.Ticket;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import cpms.services.ApiService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.Collection;
 
 @RestController
 public class ApiController {
-    @GetMapping("/api")
-    public Ticket api() {
-        return new Ticket(0, LocalDateTime.now(), LocalDateTime.now());
+    @Autowired
+    ApiService api;
+
+    @GetMapping("/api/spots")
+    public Collection<Spot> getSpots() {
+        return api.getFreeSpots();
+    }
+
+    @PostMapping("/api/ticket")
+    public Ticket postTicket(@RequestBody Ticket t) {
+        return api.addTicket(t);
+    }
+
+    @GetMapping("/api/payment/{ticketId}")
+    public Payment getPayment(@PathVariable String ticketId) {
+        return api.getPaymentForTicket(ticketId);
+    }
+
+    @PostMapping("/api/payment")
+    public Payment postPayment(@RequestBody Payment p) {
+        return api.makePayment(p);
     }
 }
