@@ -55,10 +55,7 @@ public class Ticket {
     }
 
     public double getHoursSinceStart() {
-        System.out.print(LocalDateTime.now());
-        System.out.print(startTime);
-
-        return ChronoUnit.MINUTES.between(startTime, LocalDateTime.now()) / 60.0;
+        return ChronoUnit.MINUTES.between(startTime, endTime) / 60.0;
     }
 
     public double getOvertimeHours() {

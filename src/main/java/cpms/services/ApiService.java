@@ -56,10 +56,13 @@ public class ApiService {
         return ticket.get();
     }
 
+    private boolean isPaid(Ticket t) {
+        return payments.findById(t.getId()).isPresent();
+    }
+
     public Payment getPaymentForTicket(String ticketId) {
         Ticket ticket = getTicketById(ticketId);
-        Optional<Payment> payment = payments.findById(ticketId);
-        if (payment.isPresent()) {
+        if (isPaid(ticket)) {
             throw new RuntimeException("Ticket has already been paid");
         }
 
@@ -75,7 +78,7 @@ public class ApiService {
     }
 
     public boolean isFreeSpot(Spot s) {
-        return getTickets().stream().noneMatch(x -> x.getSpotId() == s.getId());
+        return getTickets().stream().noneMatch(x -> !isPaid(x) && x.getSpotId() == s.getId());
     }
 
     public Collection<Spot> getFreeSpots() {
